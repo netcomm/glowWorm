@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//src/com/jd/glowworm=UTF-8
+encoding//src/com/jd/glowworm/asm=UTF-8
+encoding//src/com/jd/glowworm/deserializer=UTF-8
+encoding//src/com/jd/glowworm/serializer/ASMSerializerFactory.java=UTF-8
