@@ -1,7 +1,7 @@
 glowWorm
 ========
 
-由于温少开源的FastJSON非常优秀，但由于JSON本身协议是需要传输属性名等字符串的，这就使得它在java系统间作为通讯或磁盘存储的序列化方案，就显得不合适了。所以，结合FastJSON的设计 + protocol buffer做了个序列化小东西(glowworm)。 
+   由于温少开源的FastJSON非常优秀，但由于JSON本身协议是需要传输属性名等字符串的，这就使得它在java系统间作为通讯或磁盘存储的序列化方案，就显得不合适了。所以，结合FastJSON的设计 + protocol buffer做了个序列化小东西(glowworm)。 
 1.它的调用非常简单： 
   TP tmpTP = new TP(); 
    … … 
