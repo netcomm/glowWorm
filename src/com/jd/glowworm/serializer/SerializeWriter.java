@@ -17,7 +17,7 @@ package com.jd.glowworm.serializer;
 
 import java.io.IOException;
 import java.io.Writer;
-
+import java.math.BigDecimal;
 import com.jd.glowworm.util.BufferOutputStream;
 import com.jd.glowworm.util.CodedOutputStream;
 
@@ -94,6 +94,11 @@ public final class SerializeWriter extends Writer {
 		writeFloat(value);
 	}
 	
+	public void writeFieldValue(Enum<?> value) {
+		theCodedOutputStream.writeRawByte(0);
+		writeString(value.name());
+    }
+	
 	public void writeFieldValue(String name, String value, int fieldInfoIndexParm) {
         //System.out.println("writeFieldValue: "+name+":"+value);
 		//theCodedOutputStream.writeString(fieldInfoIndexParm, value);
@@ -107,6 +112,12 @@ public final class SerializeWriter extends Writer {
 		theCodedOutputStream.writeRawByte(0);
 		theCodedOutputStream.writeDouble(valueParm);
     }
+	
+	public void writeFieldValue(BigDecimal valueParm)
+	{
+		theCodedOutputStream.writeRawByte(0);
+		theCodedOutputStream.writeString(valueParm.toString());
+	}
 	
 	public void writeFieldName(String name, int fieldInfoIndexParm) {
 		//System.out.println("writeFieldName: "+name+":"+name);

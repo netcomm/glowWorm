@@ -94,6 +94,8 @@ public class Type {
     
     public static final int  STRING       = 11;
     
+    public static final int  BIGDECIMAL   = 12;
+    
     public static final int  ARRAY_INT    = 101;
     public static final int  ARRAY_OBJ    = 102;
     public static final int  LIST_ARRAYLIST = 103;
@@ -111,6 +113,7 @@ public class Type {
     public static final int  ARRAY_SHORT   = 115;
     public static final int  ARRAY_FLOAT   = 116;
     public static final int  ARRAY_BOOLEAN = 117;
+    public static final int  ENUM = 118;
 
     /**
      * The <tt>void</tt> type.

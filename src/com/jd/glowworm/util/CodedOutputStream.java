@@ -16,6 +16,7 @@
 package com.jd.glowworm.util;
 
 import java.io.IOException;
+import org.xerial.snappy.Snappy;
 
 /**
  * Encodes and writes protocol message fields.
@@ -45,7 +46,7 @@ public final class CodedOutputStream{
     {
     	return bos.getBytes();
     }
-
+    
     // -----------------------------------------------------------------
 
     /** Write a {@code double} field, including tag, to the stream. */

@@ -74,23 +74,27 @@ public class TypeUtils {
             return clazz;
         }
 
-        if (className.charAt(0) == '[') {
+        /*if (className.charAt(0) == '[') {
             Class<?> componentType = loadClass(className.substring(1));
             return Array.newInstance(componentType, 0).getClass();
-        }
+        }*/
 
         try {
             clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
+            //mappings.put(className, clazz);
             return clazz;
         } catch (Throwable e) {
             // skip
+        	e.printStackTrace();
         }
 
         try {
             clazz = Class.forName(className);
+            //mappings.put(className, clazz);
             return clazz;
         } catch (Throwable e) {
             // skip
+        	e.printStackTrace();
         }
 
         return clazz;

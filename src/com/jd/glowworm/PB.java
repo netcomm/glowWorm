@@ -7,12 +7,18 @@ import com.jd.glowworm.deserializer.ObjectDeserializer;
 import com.jd.glowworm.deserializer.PBDeserializer;
 import com.jd.glowworm.serializer.PBSerializer;
 import com.jd.glowworm.serializer.SerializeWriter;
+import com.jd.glowworm.util.TypeUtils;
 
 public class PB {
 	public static byte[] toPBBytes(Object objectParm)
 	{
 		SerializeWriter tmpSerializeWriter = new SerializeWriter();
 		PBSerializer tmpPBSerializer = new PBSerializer(tmpSerializeWriter);
+		
+		// 对象类型字符串
+		Class<?> clazz = objectParm.getClass();
+		tmpSerializeWriter.getCodedOutputStream().writeString(clazz.getName());
+		
 		tmpPBSerializer.write(objectParm);
 		return tmpSerializeWriter.getCodedOutputStream().getBytes();
 	}
@@ -53,7 +59,24 @@ public class PB {
 	
 	public static Object parsePBBytes(byte[] pbBytesParm, Class<?> fieldClass)
 	{
+		return parsePBBytes(pbBytesParm);
+	}
+	
+	public static Object parsePBBytes(byte[] pbBytesParm)
+	{
 		PBDeserializer tmpPBDeserializer = new PBDeserializer(pbBytesParm);
+		
+		Class fieldClass = null;
+		try
+		{
+			String tmpClassName = tmpPBDeserializer.scanString();
+			fieldClass = TypeUtils.loadClass(tmpClassName);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
 		ObjectDeserializer tmpObjectDeserializer = tmpPBDeserializer.getDeserializer(fieldClass);
 		Class tmpClass = tmpObjectDeserializer.getClass();
 		if (ASMJavaBeanDeserializer.class.isAssignableFrom(tmpClass) ||

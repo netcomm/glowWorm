@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
 import com.jd.glowworm.PBException;
 import com.jd.glowworm.util.ASMClassLoader;
 import com.jd.glowworm.util.IdentityHashMap;
@@ -28,6 +28,7 @@ public class PBSerializer {
 		theSerializerHMap.put(Long.class, LongSerializer.instance);
 		theSerializerHMap.put(Float.class, FloatSerializer.instance);
 		theSerializerHMap.put(Double.class, DoubleSerializer.instance);
+		theSerializerHMap.put(BigDecimal.class, BigDecimalSerializer.instance);
 		theSerializerHMap.put(String.class, StringSerializer.instance);
 		theSerializerHMap.put(Class.class, ClassSerializer.instance);
 		theSerializerHMap.put(byte[].class, ByteArraySerializer.instance);
@@ -67,6 +68,8 @@ public class PBSerializer {
             	theSerializerHMap.put(clazz, ListSerializer.instance);
             } else if (Collection.class.isAssignableFrom(clazz)) {
             	theSerializerHMap.put(clazz, CollectionSerializer.instance);
+            } else if (clazz.isEnum() || (clazz.getSuperclass() != null && clazz.getSuperclass().isEnum())) {
+            	theSerializerHMap.put(clazz, EnumSerializer.instance);
             } else if (clazz.isArray()) {
                 Class<?> componentType = clazz.getComponentType();
                 ObjectSerializer compObjectSerializer = getObjectWriter(componentType);

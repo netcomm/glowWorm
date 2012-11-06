@@ -6,6 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,7 +21,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
 import com.jd.glowworm.PBException;
 import com.jd.glowworm.asm.ASMException;
 import com.jd.glowworm.util.ASMClassLoader;
@@ -75,8 +75,8 @@ public class PBDeserializer {
         derializers.put(Long.class, LongDeserializer.instance);
         derializers.put(boolean.class, BooleanDeserializer.instance);
         derializers.put(Boolean.class, BooleanDeserializer.instance);
-/*        derializers.put(BigInteger.class, BigIntegerDeserializer.instance);
         derializers.put(BigDecimal.class, BigDecimalDeserializer.instance);
+/*      derializers.put(BigInteger.class, BigIntegerDeserializer.instance);
         derializers.put(Class.class, ClassDerializer.instance);
         derializers.put(char[].class, CharArrayDeserializer.instance);
 
@@ -281,6 +281,20 @@ public class PBDeserializer {
 		return ret;
 	}
 	
+	public BigDecimal scanBigDecimal() throws IOException
+	{
+		String tmpStrVal = theCodedInputStream.readString();
+		return new BigDecimal(tmpStrVal);
+	}
+	
+	public Object scanEnum() throws IOException
+	{
+		String typeName = scanString();
+        Class<?> clazz = TypeUtils.loadClass(typeName);
+        String tmpValue = scanString();
+        return Enum.valueOf((Class<Enum>)clazz, tmpValue);
+	}
+	
 	public float scanFloat() throws IOException
 	{
 		float ret;
@@ -409,8 +423,10 @@ public class PBDeserializer {
         if (derializer != null) {
             return derializer;
         }
-
-        if (clazz.isArray()) {
+        
+        if (clazz.isEnum()) {
+            derializer = new EnumDeserializer(clazz);
+        } else if (clazz.isArray()) {
             return ArrayDeserializer.instance;
         } else if (clazz == Set.class || clazz == HashSet.class || clazz == Collection.class || clazz == List.class
                    || clazz == ArrayList.class) {
@@ -596,6 +612,10 @@ public class PBDeserializer {
 	                return scanString();
 	            case com.jd.glowworm.asm.Type.BOOLEAN:
 	                return scanBool();
+	            case com.jd.glowworm.asm.Type.BIGDECIMAL:
+	                return scanBigDecimal();
+	            case com.jd.glowworm.asm.Type.ENUM:
+	                return scanEnum();
 	            case com.jd.glowworm.asm.Type.ARRAY_BYTE:
 	            	return scanByteArray();
 	            case com.jd.glowworm.asm.Type.ARRAY_CHAR:

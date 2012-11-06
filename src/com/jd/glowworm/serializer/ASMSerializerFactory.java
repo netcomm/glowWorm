@@ -223,8 +223,6 @@ public class ASMSerializerFactory implements Opcodes {
     }
 
     private void _enum(Class<?> clazz, MethodVisitor mw, FieldInfo property, Context context) {
-        boolean writeEnumUsingToString = false;
-        
         Label _not_null = new Label();
         Label _end_if = new Label();
         Label _end = new Label();
@@ -240,23 +238,11 @@ public class ASMSerializerFactory implements Opcodes {
 
         mw.visitLabel(_not_null);
         mw.visitVarInsn(ALOAD, context.var("out"));
-        mw.visitVarInsn(ILOAD, context.var("seperator"));
-        mw.visitVarInsn(ALOAD, context.fieldName());
         mw.visitVarInsn(ALOAD, context.var("enum"));
-
-        if (writeEnumUsingToString) {
-            mw.visitMethodInsn(INVOKEVIRTUAL, ASMUtils.getType(Object.class), "toString", "()Ljava/lang/String;");
-            mw.visitMethodInsn(INVOKEVIRTUAL, ASMUtils.getType(SerializeWriter.class), "writeFieldValue",
-                               "(CLjava/lang/String;Ljava/lang/String;)V");
-        } else {
-            mw.visitMethodInsn(INVOKEVIRTUAL, ASMUtils.getType(SerializeWriter.class), "writeFieldValue",
-                               "(CLjava/lang/String;L" + ASMUtils.getType(Enum.class) + ";)V");
-        }
-
-        _seperator(mw, context);
-
+        
+        mw.visitMethodInsn(INVOKEVIRTUAL, ASMUtils.getType(SerializeWriter.class), "writeFieldValue",
+                               "(L" + ASMUtils.getType(Enum.class) + ";)V");
         mw.visitLabel(_end_if);
-
         mw.visitLabel(_end);
     }
 
@@ -406,11 +392,9 @@ public class ASMSerializerFactory implements Opcodes {
         mw.visitLabel(_else); // else { out.writeFieldValue(seperator, fieldName, fieldValue)
 
         mw.visitVarInsn(ALOAD, context.var("out"));
-        mw.visitVarInsn(ILOAD, context.var("seperator"));
-        mw.visitVarInsn(ALOAD, context.fieldName());
         mw.visitVarInsn(ALOAD, context.var("decimal"));
         mw.visitMethodInsn(INVOKEVIRTUAL, ASMUtils.getType(SerializeWriter.class), "writeFieldValue",
-                           "(CLjava/lang/String;Ljava/math/BigDecimal;)V");
+                           "(Ljava/math/BigDecimal;)V");
         
         mw.visitJumpInsn(GOTO, _end_if);
 

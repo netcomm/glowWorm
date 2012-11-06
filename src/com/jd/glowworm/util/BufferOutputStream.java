@@ -83,4 +83,24 @@ public final class BufferOutputStream extends OutputStream
   public int size() {
     return (this.offset - this.pos);
   }
+
+public byte[] getBuffer()
+{
+	return buffer;
+}
+
+public void setBuffer(byte[] buffer)
+{
+	this.buffer = buffer;
+}
+
+public int getPos()
+{
+	return pos;
+}
+
+public void setPos(int pos)
+{
+	this.pos = pos;
+}
 }

@@ -219,29 +219,18 @@ public class ASMDeserializerFactory implements Opcodes {
             } else if (fieldClass == byte[].class) {
                 mw.visitMethodInsn(INVOKEVIRTUAL, getType(PBDeserializer.class), "scanFieldByteArray", "()[B");
                 mw.visitVarInsn(ASTORE, context.var(fieldInfo.getName() + "_asm"));
-            } else if (fieldClass.isEnum()) {/*
-                Label enumNull_ = new Label();
+            } else if (fieldClass.isEnum()) {
                 mw.visitInsn(ACONST_NULL);
                 mw.visitTypeInsn(CHECKCAST, getType(fieldClass)); // cast
                 mw.visitVarInsn(ASTORE, context.var(fieldInfo.getName() + "_asm"));
-
-                mw.visitVarInsn(ALOAD, 1);
-                mw.visitMethodInsn(INVOKEVIRTUAL, getType(DefaultJSONParser.class), "getSymbolTable",
-                                   "()" + getDesc(SymbolTable.class));
-
-                mw.visitMethodInsn(INVOKEVIRTUAL, getType(JSONScanner.class), "scanFieldSymbol",
-                                   "([C" + getDesc(SymbolTable.class) + ")Ljava/lang/String;");
-                mw.visitInsn(DUP);
-                mw.visitVarInsn(ASTORE, context.var(fieldInfo.getName() + "_asm_enumName"));
-
-                mw.visitJumpInsn(IFNULL, enumNull_);
-                mw.visitVarInsn(ALOAD, context.var(fieldInfo.getName() + "_asm_enumName"));
+                                
+                mw.visitMethodInsn(INVOKEVIRTUAL, getType(PBDeserializer.class), "scanFieldString",
+                        "()Ljava/lang/String;");
                 mw.visitMethodInsn(INVOKESTATIC, getType(fieldClass), "valueOf", "(Ljava/lang/String;)"
                                                                                  + getDesc(fieldClass));
                 mw.visitVarInsn(ASTORE, context.var(fieldInfo.getName() + "_asm"));
-                mw.visitLabel(enumNull_);
 
-            */} else if (Collection.class.isAssignableFrom(fieldClass)) {
+            } else if (Collection.class.isAssignableFrom(fieldClass)) {
 
                 Type actualTypeArgument = ((ParameterizedType) fieldType).getActualTypeArguments()[0];
 
