@@ -17,5 +17,5 @@ Map, HashMap, LinkedHashMap, TreeMap, ConcurrentMap, ConcurrentHashMap, Collecti
    
 ========
 <b>更新记录</b><br>
-2012-10-30 增加toPBBytes_Compress和parsePBBytes_Compress两个方法，通过Snappy压缩算法使得byte大小减少更多。<br>
-2012-11-06 新增parsePBBytes(byte[] pbBytesParm)，不用再传入Class<?> fieldClass这个属性；新增枚举、BigDecimal类型。<br>
+<b>2012-10-30</b> 增加toPBBytes_Compress和parsePBBytes_Compress两个方法，通过Snappy压缩算法使得byte大小减少更多。<br>
+<b>2012-11-06</b> 新增parsePBBytes(byte[] pbBytesParm)，不用再传入Class<?> fieldClass这个属性；新增枚举、BigDecimal类型。<br>
