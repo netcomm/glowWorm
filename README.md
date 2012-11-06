@@ -16,6 +16,6 @@ Map, HashMap, LinkedHashMap, TreeMap, ConcurrentMap, ConcurrentHashMap, Collecti
    作为早期版本，目前还不支持循环引用、引用、自定义输出格式等功能，但作为一个基本的二进制序列化工具，还是有它适用的场合。
    
 ========
-更新记录
-2012-10-30 增加toPBBytes_Compress和parsePBBytes_Compress两个方法，通过Snappy压缩算法使得byte大小
+<b>更新记录</b><br>
+2012-10-30 增加toPBBytes_Compress和parsePBBytes_Compress两个方法，通过Snappy压缩算法使得byte大小。<br>
 2012-11-06 
