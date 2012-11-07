@@ -59,7 +59,35 @@ public class PB {
 	
 	public static Object parsePBBytes(byte[] pbBytesParm, Class<?> fieldClass)
 	{
-		return parsePBBytes(pbBytesParm);
+		PBDeserializer tmpPBDeserializer = new PBDeserializer(pbBytesParm);
+		
+		try
+		{
+			String tmpClassName = tmpPBDeserializer.scanString();
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		return deserializeObj(tmpPBDeserializer, fieldClass);
+	}
+	
+	public static Object parsePBBytes_Compress(byte[] pbCompressBytesParm)
+	{
+		Object retObj = null;
+		
+		try
+		{
+			byte[] tmpRowBytes = Snappy.uncompress(pbCompressBytesParm);
+			retObj = parsePBBytes(tmpRowBytes);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		return retObj;
 	}
 	
 	public static Object parsePBBytes(byte[] pbBytesParm)
@@ -77,7 +105,14 @@ public class PB {
 			ex.printStackTrace();
 		}
 		
-		ObjectDeserializer tmpObjectDeserializer = tmpPBDeserializer.getDeserializer(fieldClass);
+		return deserializeObj(tmpPBDeserializer, fieldClass);
+	}
+	
+	private static Object deserializeObj(PBDeserializer pBDeserializerParm,
+			Class<?> fieldClass)
+	{
+		ObjectDeserializer tmpObjectDeserializer = pBDeserializerParm.getDeserializer(fieldClass);
+		
 		Class tmpClass = tmpObjectDeserializer.getClass();
 		if (ASMJavaBeanDeserializer.class.isAssignableFrom(tmpClass) ||
 				JavaBeanDeserializer.class.isAssignableFrom(tmpClass))
@@ -88,7 +123,7 @@ public class PB {
 		{
 			try
 			{
-				byte tmpType = tmpPBDeserializer.scanByte();
+				byte tmpType = pBDeserializerParm.scanByte();
 			}
 			catch(Exception ex)
 			{
@@ -96,7 +131,7 @@ public class PB {
 			}
 		}
 		
-		Object retObj = tmpObjectDeserializer.deserialze(tmpPBDeserializer, fieldClass, null);
+		Object retObj = tmpObjectDeserializer.deserialze(pBDeserializerParm, fieldClass, null);
 		
 		return retObj;
 	}
