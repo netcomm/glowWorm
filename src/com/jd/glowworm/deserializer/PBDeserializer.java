@@ -864,38 +864,34 @@ public class PBDeserializer {
 	            deserializer = FloatDeserializer.instance;
 	            parseIntOrdoubleOrlong(array, deserializer);
 	            return;
-	        } else if (String.class == type) {
-	            deserializer = StringDeserializer.instance;
 	        } else {
 	            deserializer = getDeserializer(type);
 	        }
-	
+	        
 	        ParseContext context = this.getContext();
 	        this.setContext(array, fieldName);
-        
+	        
         	int tmpListSz = scanInt();
             for (int i = 0; i < tmpListSz; i++)
             {
             	byte tmpIsNull = theCodedInputStream.readRawByte();
             	if (0 == tmpIsNull)
             	{
-	                if (int.class == type) {
-	                    Object val = IntegerDeserializer.deserialze(this, null);
-	                    array.add(val);
-	                } else if (String.class == type) {
-	                    String value = StringDeserializer.deserialze(this);
-	                    array.add(value);
-	                } else {
-	                    Object val;
-	                    if (deserializer.getClass().getName().startsWith(ASMDeserializerFactory.DeserializerClassName_prefix))
-	        		    {
-	                    	theCodedInputStream.readRawByte();
-	                    	String tmpClassName = theCodedInputStream.readString();
-	        		    }
-	                    
-	                    val = deserializer.deserialze(this, type, i);
-	                    array.add(val);
+            		Object val;
+            		// 如果是ASM生成的反序列化类
+	                if (deserializer.getClass().getName().startsWith(ASMDeserializerFactory.DeserializerClassName_prefix))
+	        		{
+	                	byte tmpType = theCodedInputStream.readRawByte();
+	                    String tmpClassName = theCodedInputStream.readString();
+	        		}
+	                // 如果不是JavaObjectDeserializer
+	                else if ( ! JavaObjectDeserializer.class.isAssignableFrom(deserializer.getClass()))
+	                {
+	                	byte tmpType = theCodedInputStream.readRawByte();
 	                }
+	                
+	                val = deserializer.deserialze(this, type, null);
+	                array.add(val);
             	}
             	else
             	{
@@ -998,4 +994,30 @@ public class PBDeserializer {
             return Collections.emptyMap();
         }
     }
+	
+	public Object doASMDeserializer(ObjectDeserializer theObjectDeserializerParm,
+			Type type, Object fieldName)
+	{
+		Object ret = null;
+		try
+		{
+			if (ASMJavaBeanDeserializer.class
+					.isAssignableFrom(theObjectDeserializerParm.getClass()))
+			{
+				byte tmpByte = theCodedInputStream.readRawByte();
+				if (tmpByte == 1)
+				{
+					return null;
+				}
+			}
+			
+			ret = theObjectDeserializerParm.deserialze(this, type, fieldName);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		return ret;
+	}
 }

@@ -545,11 +545,11 @@ public class ASMDeserializerFactory implements Opcodes {
                           getDesc(ObjectDeserializer.class));
 
         mw.visitLabel(notNull_);
-
+        
+        mw.visitVarInsn(ALOAD, 1);
         mw.visitVarInsn(ALOAD, 0);
         mw.visitFieldInsn(GETFIELD, context.getClassName(), fieldInfo.getName() + "_asm_deser__",
                           getDesc(ObjectDeserializer.class));
-        mw.visitVarInsn(ALOAD, 1);
         if (fieldInfo.getFieldType() instanceof Class) {
             mw.visitLdcInsn(com.jd.glowworm.asm.Type.getType(getDesc(fieldInfo.getFieldClass())));
         } else {
@@ -559,9 +559,14 @@ public class ASMDeserializerFactory implements Opcodes {
                                "(Ljava/lang/String;)Ljava/lang/reflect/Type;");
         }
         mw.visitLdcInsn(fieldInfo.getName());
-        mw.visitMethodInsn(INVOKEINTERFACE, getType(ObjectDeserializer.class), "deserialze",
+        /*mw.visitMethodInsn(INVOKEINTERFACE, getType(ObjectDeserializer.class), "deserialze",
                            "(" + getDesc(PBDeserializer.class) + getDesc(Type.class)
-                                   + "Ljava/lang/Object;)Ljava/lang/Object;");
+                                   + "Ljava/lang/Object;)Ljava/lang/Object;");*/
+        
+        mw.visitMethodInsn(INVOKEVIRTUAL, getType(PBDeserializer.class), "doASMDeserializer",
+                "(Lcom/jd/glowworm/deserializer/ObjectDeserializer;"
+                +getDesc(Type.class)+"Ljava/lang/Object;)Ljava/lang/Object;");
+        
         mw.visitTypeInsn(CHECKCAST, getType(fieldClass)); // cast
         mw.visitVarInsn(ASTORE, context.var(fieldInfo.getName() + "_asm"));
     }

@@ -85,7 +85,7 @@ public class TypeUtils {
             return clazz;
         } catch (Throwable e) {
             // skip
-        	e.printStackTrace();
+        	//e.printStackTrace();
         }
 
         try {
@@ -94,7 +94,7 @@ public class TypeUtils {
             return clazz;
         } catch (Throwable e) {
             // skip
-        	e.printStackTrace();
+        	//e.printStackTrace();
         }
 
         return clazz;
