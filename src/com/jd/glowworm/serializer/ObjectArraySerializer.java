@@ -67,6 +67,13 @@ public class ObjectArraySerializer implements ObjectSerializer {
                     } else {
                         preClazz = clazz;
                         preWriter = serializer.getObjectWriter(clazz);
+                        
+                        if (preWriter.getClass().getName().startsWith(ASMSerializerFactory.GenClassName_prefix))
+    	                {
+    	                	out.getCodedOutputStream().writeRawByte(com.jd.glowworm.asm.Type.OBJECT);
+    	                	out.getCodedOutputStream().writeString(item.getClass().getName());
+    	                }
+                        
                         preWriter.write(serializer, item, null, clazz);
                     }
                 }

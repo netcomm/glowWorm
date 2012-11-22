@@ -59,6 +59,13 @@ public class ArraySerializer implements ObjectSerializer {
                 else
                 {
                 	out.getCodedOutputStream().writeRawByte(0);
+                	
+                	if (compObjectSerializer.getClass().getName().startsWith(ASMSerializerFactory.GenClassName_prefix))
+	                {
+	                	out.getCodedOutputStream().writeRawByte(com.jd.glowworm.asm.Type.OBJECT);
+	                	out.getCodedOutputStream().writeString(item.getClass().getName());
+	                }
+                	
                     compObjectSerializer.write(paramPBSerializer, item, null, null);
                 }
             }

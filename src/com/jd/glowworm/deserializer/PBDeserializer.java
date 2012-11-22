@@ -883,6 +883,7 @@ public class PBDeserializer {
 	        		{
 	                	byte tmpType = theCodedInputStream.readRawByte();
 	                    String tmpClassName = theCodedInputStream.readString();
+	                    System.out.println("tmpClassName "+tmpClassName);
 	        		}
 	                // 如果不是JavaObjectDeserializer
 	                else if ( ! JavaObjectDeserializer.class.isAssignableFrom(deserializer.getClass()))
