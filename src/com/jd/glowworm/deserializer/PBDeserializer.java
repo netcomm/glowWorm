@@ -348,7 +348,9 @@ public class PBDeserializer {
 					if (tmpIsNull == 0)
 					{
 						byte tmpType = theCodedInputStream.readRawByte();
-						if (tmpType == com.jd.glowworm.asm.Type.OBJECT)
+						// 如果是OBJECT或者ENUM,则需要过滤掉类名
+						if (tmpType == com.jd.glowworm.asm.Type.OBJECT ||
+								tmpType == com.jd.glowworm.asm.Type.ENUM)
 						{
 							String tmpClassName = theCodedInputStream.readString();
 						}

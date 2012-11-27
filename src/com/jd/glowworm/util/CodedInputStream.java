@@ -304,7 +304,8 @@ public final class CodedInputStream
     long result = 0L;
     while (shift < 64) {
       byte b = readRawByte();
-      result |= (b & 0x7F) << shift;
+      // 修复大数值long数据丢失的bug
+      result |= (long)(b & 0x7F) << shift;
       if ((b & 0x80) == 0)
         return result;
       shift += 7;
