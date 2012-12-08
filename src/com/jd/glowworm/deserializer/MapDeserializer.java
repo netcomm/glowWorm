@@ -81,7 +81,32 @@ public class MapDeserializer implements ObjectDeserializer {
 		{
 			for (int i = 0; i < mapItemSizeParm; i++)
 			{
+				// 如果类型是已知的，而不是Object类型
+				if ( !(keyDeserializer instanceof JavaObjectDeserializer))
+				{
+					try
+					{
+						parser.scanByte();
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+				}
 				Object key = keyDeserializer.deserialze(parser, keyType, null);
+				
+				// 如果类型是已知的，而不是Object类型
+				if ( !(valueDeserializer instanceof JavaObjectDeserializer))
+				{
+					try
+					{
+						parser.scanByte();
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+				}
 				Object value = valueDeserializer.deserialze(parser, valueType,
 						null);
 

@@ -8,15 +8,26 @@ public class StringDeserializer implements ObjectDeserializer {
 
     @SuppressWarnings("unchecked")
     public <T> T deserialze(PBDeserializer parser, Type clazz, Object fieldName) {
-        return (T) deserialze(parser);
+        return (T) deserialze(parser, fieldName);
     }
     
     @SuppressWarnings("unchecked")
-    public static <T> T deserialze(PBDeserializer parser) {
+    public static <T> T deserialze(PBDeserializer parser, Object fieldName) {
     	String value = null;
     	try
     	{
-    		value = parser.scanString();
+    		if (fieldName != null)
+    		{
+    			byte tmpIsNull = parser.getTheCodedInputStream().readRawByte();
+    			if (tmpIsNull == 0)
+    			{
+    				value = parser.scanString();
+    			}
+    		}
+    		else
+    		{
+    			value = parser.scanString();
+    		}
     	}
     	catch(Exception ex)
     	{

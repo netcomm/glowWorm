@@ -60,7 +60,7 @@ public class ArrayDeserializer implements ObjectDeserializer {
         	}
         }
         else if (char.class == componentType) {
-        	String value = StringDeserializer.deserialze(parser);
+        	String value = StringDeserializer.deserialze(parser, null);
             return (T) value.toCharArray();
         }
         else if (boolean.class == componentType)
