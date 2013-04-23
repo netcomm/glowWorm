@@ -26,7 +26,7 @@ public class ArrayDeserializer implements ObjectDeserializer {
 				byte tmpIsNull = parser.getTheCodedInputStream().readRawByte();
 				if (tmpIsNull == 0)
 				{
-					return getTheArray(parser, type, fieldName);
+					return (T) getTheArray(parser, type, fieldName);
 				}
     		}
     		catch(Exception ex)
@@ -38,7 +38,7 @@ public class ArrayDeserializer implements ObjectDeserializer {
 		}
 		else
 		{
-	        return getTheArray(parser, type, fieldName);
+	        return (T) getTheArray(parser, type, fieldName);
 		}
     }
 
