@@ -62,7 +62,7 @@ public class IdentityHashMap<K, V> {
         }
 
         Entry<K, V> entry = new Entry<K, V>(key, value, hash, buckets[bucket]);
-        buckets[bucket] = entry;  // 并发是处理时会可能导致缓存丢失，但不影响正确�?
+        buckets[bucket] = entry;  // 并发是处理时会可能导致缓存丢失，但不影响正确�?
 
         return false;
     }
